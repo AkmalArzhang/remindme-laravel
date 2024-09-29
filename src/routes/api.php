@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReminderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('session', [AuthController::class, 'authenticate']);
 Route::put('session', [AuthController::class, 'refreshToken']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('reminders', ReminderController::class);
+});

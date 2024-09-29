@@ -28,7 +28,11 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $tokens = $this->createTokens($user);
+
+        // Testing
+        $tokens = $this->createTokens($user, 864000);
+
+        // $tokens = $this->createTokens($user);
 
         return $this->success([
             'user' => new UserResource($user),
