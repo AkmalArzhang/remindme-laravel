@@ -5,14 +5,32 @@ use Illuminate\Http\JsonResponse;
 
 trait APIResponse
 {
-    protected function success($data, $code = 200): JsonResponse
+    /**
+     * success response
+     *
+     * @param  mixed $data
+     * @param  mixed $code
+     * @return JsonResponse
+     */
+    protected function success($data = null, $code = 200): JsonResponse
     {
-        return response()->json([
-            'ok' => true,
-            'data' => $data
-        ], $code);
+        $response = ['ok' => true];
+
+        if ($data) {
+            $response['data'] = $data;
+        }
+
+        return response()->json($response, $code);
     }
 
+    /**
+     * error response
+     *
+     * @param  mixed $err
+     * @param  mixed $message
+     * @param  mixed $code
+     * @return JsonResponse
+     */
     protected function error($err = null, $message = null, $code = 400): JsonResponse
     {
         return response()->json([
