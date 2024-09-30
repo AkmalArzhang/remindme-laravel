@@ -1,0 +1,24 @@
+import { refreshToken } from "./refreshToken";
+
+export const tokenCheck = async () => {
+    let token = localStorage.getItem("refresh_token");
+    let userData = localStorage.getItem("refresh_token");
+
+    if (!token || !userData) return false;
+
+    token = JSON.parse(token);
+    userData = JSON.parse(userData);
+
+    const response = await refreshToken(token);
+
+    if (response.status === 200) {
+        localStorage.setItem(
+            "refresh_token",
+            JSON.stringify(response.data.data.refresh_token)
+        );
+
+        return response.data.data.access_token;
+    }
+
+    return false;
+};

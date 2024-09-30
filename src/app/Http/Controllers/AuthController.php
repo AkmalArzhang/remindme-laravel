@@ -67,4 +67,21 @@ class AuthController extends Controller
             ]
         );
     }
+
+    /**
+     * logout
+     *
+     * @param  mixed $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $token = $request->bearerToken();
+
+        $findToken = PersonalAccessToken::findToken($token);
+
+        $this->revokeToken($findToken);
+
+        return $this->success();
+    }
 }

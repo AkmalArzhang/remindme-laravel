@@ -1,0 +1,21 @@
+.custom-gradient {
+    /* fallback for old browsers */
+    background: $primary;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, $warning, $purple, $primary);
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, $warning, $purple, $primary);
+
+    @media (min-width: 769px) {
+        border-top-right-radius: 0.3rem;
+        border-bottom-right-radius: 0.3rem;
+    }
+}
+
+.main-layout {
+    @media (min-width: 768px) {
+        height: 100vh !important;
+    }
+}
