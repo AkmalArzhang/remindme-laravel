@@ -1,5 +1,6 @@
 import { refreshToken } from "./refreshToken";
 
+// Check Token: Return the access_token if refresh_token is valid
 export const tokenCheck = async () => {
     let token = localStorage.getItem("refresh_token");
     let userData = localStorage.getItem("refresh_token");

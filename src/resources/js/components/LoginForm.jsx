@@ -10,6 +10,7 @@ const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // If signed in => Navigate to reminders
     useEffect(() => {
         tokenCheck().then((res) => {
             if (res) {
@@ -26,6 +27,7 @@ const LoginForm = () => {
             password,
         };
 
+        // Validate form and credentials
         if (Object.values(credentials).some((value) => value.trim() === "")) {
             toast.error("Email and password is required!", {
                 position: "top-right",
@@ -36,9 +38,11 @@ const LoginForm = () => {
         setLoading(true);
 
         try {
+            // Call session API
             const response = await api.post("/session", credentials);
 
             if (response.status === 200) {
+                // Set local storage
                 localStorage.setItem(
                     "refresh_token",
                     JSON.stringify(response.data.data.refresh_token)
@@ -47,12 +51,17 @@ const LoginForm = () => {
                     "user",
                     JSON.stringify(response.data.data.user)
                 );
+
+                // Toast success
                 toast.success("Login Successful!", {
                     position: "top-right",
                 });
+
+                // Navigate to reminders
                 navigate("/reminders");
             }
         } catch (error) {
+            // Toast Error
             toast.error(
                 error.response.data.message || "Something went wrong!",
                 {
