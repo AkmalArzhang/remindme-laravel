@@ -34,20 +34,25 @@ const Reminders = () => {
 
     useEffect(() => {
         tokenCheck().then((res) => {
+            // If not signed in, navigate to Login
             if (!res) {
                 navigate("/");
             }
 
+            // Load Reminders
             loadReminders();
         });
     }, []);
 
+    // Get User Data from Local Storage
     let userData = localStorage.getItem("user");
     userData = JSON.parse(userData);
 
+    // Load Reminders
     const loadReminders = async () => {
         setLoading(true);
 
+        // Check token: If not signed in, navigate to Login
         const token = await tokenCheck();
 
         if (!token) {
@@ -55,6 +60,7 @@ const Reminders = () => {
         }
 
         try {
+            // Call API
             const response = await api.get("/reminders", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -63,9 +69,11 @@ const Reminders = () => {
             });
 
             if (response.status === 200) {
+                // Update the List
                 setList(response.data.data.reminders || []);
             }
         } catch (error) {
+            // Toast Error
             toast.error(response.response.data.message, {
                 position: "top-right",
             });
@@ -74,7 +82,8 @@ const Reminders = () => {
         setLoading(false);
     };
 
-    const clearForm = async () => {
+    // Clear the Form
+    const clearForm = () => {
         setTitle("");
         setDescription("");
         setEventAt("");
@@ -83,7 +92,9 @@ const Reminders = () => {
         setEditId("");
     };
 
+    // Save the Form => Submit to API Endpoint
     const handleSaveForm = async () => {
+        // Gather the data
         const data = {
             title,
             description,
@@ -91,6 +102,7 @@ const Reminders = () => {
             remind_at: Math.floor(new Date(remindAt).getTime() / 1000),
         };
 
+        // If any fields are empty
         if (
             title.trim() === "" ||
             description.trim() === "" ||
@@ -105,6 +117,7 @@ const Reminders = () => {
 
         setFormLoading(true);
 
+        // Check token: If not signed in, navigate to Login
         const token = await tokenCheck();
 
         if (!token) {
@@ -114,6 +127,7 @@ const Reminders = () => {
         try {
             let response;
 
+            // If editId exist, make a PUT request
             if (edit && editId !== "") {
                 response = await api.put(`/reminders/${editId}`, data, {
                     headers: {
@@ -121,7 +135,9 @@ const Reminders = () => {
                         Accept: "application/json",
                     },
                 });
-            } else {
+            }
+            // Else make a POST request
+            else {
                 response = await api.post("/reminders", data, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -131,6 +147,7 @@ const Reminders = () => {
             }
 
             if (response && response.status === 200) {
+                // If EditId Exist => Just update the list in the frontend.
                 if (edit && editId !== "") {
                     const newValues = {
                         title: title,
@@ -146,23 +163,25 @@ const Reminders = () => {
                                 : item
                         )
                     );
-                } else {
+                }
+                // Otherwise update the reminders list
+                else {
                     loadReminders();
                 }
+
+                // Close the Modal
                 document.getElementById("closeReminderModal").click();
 
-                setTitle("");
-                setDescription("");
-                setEventAt("");
-                setRemindAt("");
-                setEdit(false);
-                setEditId("");
+                // clear the form
+                clearForm();
 
+                // Toast success
                 toast.success("Reminder successfully created!", {
                     position: "top-right",
                 });
             }
         } catch (error) {
+            // Toast Error
             toast.error(
                 error.response.data.message || "Something went wrong!",
                 {
@@ -181,6 +200,7 @@ const Reminders = () => {
 
         setDeleteLoading(true);
 
+        // Check token: If not signed in, navigate to Login
         const token = await tokenCheck();
 
         if (!token) {
@@ -188,6 +208,7 @@ const Reminders = () => {
         }
 
         try {
+            // Call the Delete API
             const response = await api.delete(`/reminders/${deleteItem}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -196,16 +217,21 @@ const Reminders = () => {
             });
 
             if (response.status === 200) {
+                // Load Reminders
                 loadReminders();
+
+                // Close Modal
                 document.getElementById("closeDeleteModal").click();
 
                 setDeleteItem("");
 
+                // Toast Success
                 toast.success("Reminder successfully deleted!", {
                     position: "top-right",
                 });
             }
         } catch (error) {
+            // Toast Error
             toast.error("Something went wrong!", {
                 position: "top-right",
             });
