@@ -24,7 +24,7 @@ class ReminderFactory extends Factory
             'description' => $this->faker->paragraph,
             'remind_at' => strtotime($this->faker->dateTimeBetween('now', '+1 month')->format('Y-m-d H:i:s')),
             'event_at' => strtotime($this->faker->dateTimeBetween('now', '+2 months')->format('Y-m-d H:i:s')),
-            'user_id' => 1,
+            'user_id' => rand(1, 2),
         ];
     }
 }
