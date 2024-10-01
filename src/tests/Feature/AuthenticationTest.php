@@ -23,6 +23,11 @@ class AuthenticationTest extends TestCase
             'password' => bcrypt('123456')
         ]);
 
+        User::factory()->create([
+            'email' => 'bob@mail.com',
+            'password' => bcrypt('123456')
+        ]);
+
         $response = $this->postJson('/api/session', [
             'email' => 'alice@mail.com',
             'password' => '123456',
